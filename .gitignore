@@ -1,0 +1,10 @@
+.gdb_history
+*.pro.user
+*.dat
+*.log
+tmp/
+*.autosave
+/core.*
+callgrind.*
+rom/
+config.ini
