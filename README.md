@@ -77,3 +77,7 @@ Only **NROM** and **MMC1** are supported.
 
 * Sound
 * More cartridge mappers
+
+## License
+
+This project is licensed under the **GPLv3**.
