@@ -34,10 +34,6 @@ void CrtWidget::setScale(float scale) {
   this->update();
 }
 
-uint32_t *CrtWidget::nextFrameBuffer() {
-  throw std::runtime_error("Shouldn't be used atm");
-}
-
 void CrtWidget::displayFrameBuffer(uint32_t *buffer) {
   const uchar *data = reinterpret_cast<uchar *>(buffer);
   uchar *destination = this->d->display.bits();

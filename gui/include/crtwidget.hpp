@@ -24,7 +24,6 @@ public:
   float scale() const;
   void setScale(float scale);
 
-  virtual uint32_t *nextFrameBuffer() override;
   virtual void displayFrameBuffer(uint32_t *buffer) override;
 
 signals:
