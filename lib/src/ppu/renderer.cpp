@@ -63,11 +63,9 @@ struct RendererPrivate {
   static constexpr int NAME_TABLE_SIZE = 0x400; // 1KiB
   static constexpr int ATTR_TABLE_OFFSET = 0x3C0;
   static constexpr int ATTR_TABLE_SIZE = 64; // 64B
-  static constexpr int WIDTH = 256;
-  static constexpr int HEIGHT = 240;
 
-  // Private
-  uint32_t pixels[WIDTH * HEIGHT]; // TODO: Don't hardcode to NTSC
+  // TODO: Don't hardcode to NTSC
+  uint32_t pixels[Renderer::WIDTH * Renderer::HEIGHT];
   int scanLine = 0;
 
   static constexpr int patternTableAddress(bool which) {
@@ -251,7 +249,7 @@ struct RendererPrivate {
   void drawBackground(const ScanLineTiles &bg, uint8_t *dots) {
     int patterns = this->backgroundPatternTable();
 
-    uint32_t *output = this->pixels + this->scanLine * WIDTH;
+    uint32_t *output = this->pixels + this->scanLine * Renderer::WIDTH;
     int startX = bg.x;
     int pos = 0;
     int columnCount = NAMETABLE_COLUMNS + !!bg.x;
@@ -268,7 +266,7 @@ struct RendererPrivate {
       Palette palette = palettes[bg.palettes[column]];
 
       uint8_t bits = 0;
-      for (int x = startX; x < 8 && pos < WIDTH; x++, pos++) {
+      for (int x = startX; x < 8 && pos < Renderer::WIDTH; x++, pos++) {
         if (pos >= minPos) {
           bits |= (!!slice.row[x]) << x;
           output[pos] = palette.argb(slice.row[x]);
@@ -290,7 +288,7 @@ struct RendererPrivate {
   void sprite0HitTest(int x, TileSlice slice, uint8_t *dots) {
     if (slice.value == 0) return;
 
-    for (int i = 0; i < 8 && x < WIDTH - 1; i++, x++) {
+    for (int i = 0; i < 8 && x < Renderer::WIDTH - 1; i++, x++) {
       if (slice.row[i] && bitTest(dots, x)) {
         this->vram->status.setFlag(SpriteHit, true);
         break;
@@ -317,7 +315,7 @@ struct RendererPrivate {
     if (sprites.count < 1) return;
 
     int minPos = this->vram->mask.testFlag(ShowSpritesLeftmost) ? 0 : 8;
-    uint32_t *output = this->pixels + this->scanLine * WIDTH;
+    uint32_t *output = this->pixels + this->scanLine * Renderer::WIDTH;
     Palette palettes[4] = {
       this->vram->palette(4), this->vram->palette(5), this->vram->palette(6), this->vram->palette(7)
     };
@@ -339,7 +337,7 @@ struct RendererPrivate {
     }
 
     // Check for every single dot in the column
-    for (int x = minPos; x < WIDTH; x++) {
+    for (int x = minPos; x < Renderer::WIDTH; x++) {
       int palette = 0;
       int color = 0;
       bool noPriority = false;
@@ -377,7 +375,7 @@ struct RendererPrivate {
     // a 1 for an opaque pixel (Color != 0), and a 0 for an "insivible" pixel
     // (Color = 0, the backdrop color).  Add an extra byte to account for an
     // extra tile for fine-X scrolling.
-    uint8_t dots[WIDTH / 8 + 1]; // 256 / 8 + 1 = 65
+    uint8_t dots[Renderer::WIDTH / 8 + 1]; // 256 / 8 + 1 = 65
 
     ScanLineTiles bg = this->analyzeScanLineNameTable();
     ScanLineSprites sprites = this->analyzeScanLineSprites();
@@ -389,7 +387,7 @@ struct RendererPrivate {
     // with the backdrop color.
     if (!bg.enabled && !sprites.enabled) {
       uint32_t color = this->vram->palette(0).argb(0); // Get backdrop color
-      for (int i = 0; i < WIDTH * HEIGHT; i++) this->pixels[i] = color;
+      for (int i = 0; i < Renderer::WIDTH * Renderer::HEIGHT; i++) this->pixels[i] = color;
     }
 
 #ifdef DEBUG_SPRITES

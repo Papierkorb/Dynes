@@ -17,6 +17,15 @@ struct RendererPrivate;
  */
 class Renderer {
 public:
+
+  // TODO: Don't hardcode NTSC values.
+
+  /** Width of a frame in pixels. */
+  static constexpr int WIDTH = 256;
+
+  /** Height of a frame in pixels. */
+  static constexpr int HEIGHT = 240;
+
   Renderer(Memory *vram, SurfaceManager *surfaces, Cpu::Base *cpu);
   ~Renderer();
 
