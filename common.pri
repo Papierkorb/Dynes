@@ -10,3 +10,21 @@ LIBS += -L$$OUT_PWD/../lib
 #CONFIG += dynes_core_dynarec_llvm   # LLVM Dynarec (LLVM 4.0)
 #CONFIG += dynes_core_lua            # Lua Dynarec (Lua 5.3+)
 CONFIG += dynes_core_dynarec_amd64  # AMD64 Dynarec (No dependencies!)
+
+###
+
+CONFIG(dynes_core_dynarec_llvm) {
+DEFINES += NDEBUG LLVM_BUILD_GLOBAL_ISEL
+LIBS += $$system(llvm-config --libs)
+
+DEFINES += DYNES_CORE_DYNAREC_LLVM
+}
+
+CONFIG(dynes_core_lua) {
+DEFINES += DYNES_CORE_LUA
+LIBS += -llua
+}
+
+CONFIG(dynes_core_dynarec_amd64) {
+DEFINES += DYNES_CORE_DYNAREC_AMD64
+}

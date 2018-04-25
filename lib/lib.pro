@@ -64,11 +64,6 @@ SOURCES += src/interpret/core.cpp
 ### Dynarec/LLVM
 
 CONFIG(dynes_core_dynarec_llvm) {
-DEFINES += NDEBUG LLVM_BUILD_GLOBAL_ISEL
-LIBS += $$system(llvm-config --libs)
-
-DEFINES += DYNES_CORE_DYNAREC_LLVM
-
 HEADERS += \
     include/dynarec/function.hpp \
     include/dynarec/common.hpp \
@@ -99,8 +94,6 @@ SOURCES += \
 ### Lua
 
 CONFIG(dynes_core_lua) {
-DEFINES += DYNES_CORE_LUA
-LIBS += -llua
 HEADERS += \
     include/lua/core_lua.hpp \
     include/lua/codegenerator.hpp \
@@ -115,8 +108,6 @@ SOURCES += \
 ### Dynarec/AMD64
 
 CONFIG(dynes_core_dynarec_amd64) {
-DEFINES += DYNES_CORE_DYNAREC_AMD64
-
 HEADERS += \
     include/amd64/linker.hpp \
     include/amd64/assembler.hpp \
