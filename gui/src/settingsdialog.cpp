@@ -1,4 +1,4 @@
-#include <gui/settingsdialog.hpp>
+#include <settingsdialog.hpp>
 
 #include <functional>
 

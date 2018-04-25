@@ -2,27 +2,31 @@
 
 #include <llvm/IR/DerivedTypes.h>
 
+#include <llvm/Support/raw_ostream.h>
+#include <iostream>
+
 namespace Dynarec {
-void StructTranslator::resolveAll(Builder &b, llvm::Value *value, std::function<bool (llvm::Value *, unsigned int)> func) {
-  llvm::Type *structType = value->getType();
+static llvm::StructType *unpackStructType(llvm::Type *type) {
+  if (type->isPointerTy()) // Auto resolve pointers
+    return llvm::cast<llvm::StructType>(type->getPointerElementType());
+  return llvm::cast<llvm::StructType>(type);
+}
 
-  if (structType->isPointerTy()) // Auto resolve pointers
-    structType = structType->getPointerElementType();
-
-  llvm::LLVMContext &ctx = structType->getContext();
+void StructTranslator::resolveAll(Builder &b, llvm::Value *value, std::function<bool(llvm::Value *, unsigned int)> func) {
+  llvm::StructType *structType = unpackStructType(value->getType());
   llvm::Value *structPtr = b.CreateBitOrPointerCast(value, b.getInt8PtrTy());
-  int offset = 0;
+  uint32_t offset = 0;
+  uint32_t idx = 0;
 
-  for (unsigned int i = 0; i < structType->getStructNumElements(); i++) {
-    llvm::Type *type = structType->getStructElementType(i);
-    llvm::PointerType *typePtr = llvm::PointerType::get(type, 0);
-    llvm::Value *untypedPtr = b.CreateGEP(structPtr, const32(ctx, offset));
+  for (llvm::Type *type : structType->elements()) {
+    llvm::PointerType *typePtr = type->getPointerTo();
+    llvm::Value *untypedPtr = b.CreateGEP(structPtr, b.getInt32(offset));
     llvm::Value *typedPtr = b.CreateBitOrPointerCast(untypedPtr, typePtr);
 
-    if (!func(typedPtr, i)) break;
+    if (!func(typedPtr, idx)) break;
 
-    llvm::IntegerType *intType = llvm::cast<llvm::IntegerType>(type);
-    offset += intType->getIntegerBitWidth() / 8;
+    offset += type->getPrimitiveSizeInBits() / 8;
+    idx++;
   }
 }
 

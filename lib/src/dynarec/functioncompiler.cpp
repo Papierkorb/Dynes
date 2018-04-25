@@ -27,12 +27,19 @@ struct FunctionCompilerImpl {
   }
 
   llvm::Function *buildLlvmFunction(llvm::LLVMContext &ctx, Function *function) {
-    llvm::ArrayRef<llvm::Type *> args{ llvm::PointerType::get(this->compiler.stateType(), 0) };
-    llvm::FunctionType *prototype = llvm::FunctionType::get(llvm::Type::getVoidTy(ctx), args, false);
-
     std::string name = function->analyzed().nativeName().toStdString();
 
+#if 0
+    llvm::ArrayRef<llvm::Type *> args(llvm::PointerType::get(this->compiler.stateType(), 0));
+    llvm::FunctionType *prototype = llvm::FunctionType::get(llvm::Type::getVoidTy(ctx), args, false);
+
+
     return llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, name, this->module);
+#else
+    llvm::Constant *c = this->module->getOrInsertFunction(name, llvm::Type::getVoidTy(ctx),
+                                                          llvm::PointerType::get(this->compiler.stateType(), 0));
+    return llvm::cast<llvm::Function>(c);
+#endif
   }
 
   bool isBranching(Analysis::Branch::Instruction &instr) {

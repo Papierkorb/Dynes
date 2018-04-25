@@ -1,6 +1,6 @@
-#include <gui/crtwidget.hpp>
-#include <gui/mainwindow.hpp>
-#include <gui/settingsdialog.hpp>
+#include <crtwidget.hpp>
+#include <mainwindow.hpp>
+#include <settingsdialog.hpp>
 
 #include <core/configuration.hpp>
 #include <core/runner.hpp>

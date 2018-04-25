@@ -36,7 +36,7 @@ Compiler::Compiler() : d(new CompilerPrivate) {
     llvm::Type::getInt8Ty(this->d->ctx), // u8, State::Reason
   };
 
-  this->d->stateType = llvm::StructType::create(this->d->ctx, elements, "CpuContext");
+  this->d->stateType = llvm::StructType::create(this->d->ctx, elements, "CpuContext", true);
 }
 
 Compiler::~Compiler() {

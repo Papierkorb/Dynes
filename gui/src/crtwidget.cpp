@@ -1,4 +1,4 @@
-#include <gui/crtwidget.hpp>
+#include <crtwidget.hpp>
 
 #include <QPainter>
 
