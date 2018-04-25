@@ -18,8 +18,9 @@
 //#define TRACE_INSTRUCTIONS
 
 struct RunnerPrivate {
-  RunnerPrivate(const Core::InesFile &i) : ines(i) { }
+  RunnerPrivate(const QString &type, const Core::InesFile &i) : cpuType(type), ines(i) { }
 
+  QString cpuType;
   Core::InesFile ines;
   Cartridge::Base::Ptr cartridge;
 
@@ -35,7 +36,7 @@ struct RunnerPrivate {
 
 namespace Core {
 Runner::Runner(const Core::InesFile &ines, const QString &cpuType, Ppu::SurfaceManager *surfaces, QObject *parent)
-  : QObject(parent), d(new RunnerPrivate(ines))
+  : QObject(parent), d(new RunnerPrivate(cpuType, ines))
 {
   this->d->surfaces = surfaces;
   this->d->cartridge = Cartridge::Base::createById(ines.mapperType(), ines);
@@ -69,6 +70,10 @@ Cpu::Memory *Runner::ram() {
 
 Ppu::Memory *Runner::vram() {
   return this->d->vram.get();
+}
+
+const QString &Runner::cpuImplementation() const {
+  return this->d->cpuType;
 }
 
 void Runner::reset(bool hard) {

@@ -41,6 +41,9 @@ public:
   /** Pointer to the memory as seen by the PPU. */
   Ppu::Memory *vram();
 
+  /** The used CPU core name. */
+  const QString &cpuImplementation() const;
+
 public slots:
   /**
    * Resets the internal state.  \b Must be called before calling \c tick() the
