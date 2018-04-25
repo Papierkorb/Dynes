@@ -18,6 +18,9 @@ public:
   void setStart(bool on);
   void setSelect(bool on);
 
+  /** Clears all button presses. */
+  void reset();
+
   /** Fetches the next serial state byte. */
   uint8_t read();
 

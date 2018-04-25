@@ -54,6 +54,10 @@ void Gamepad::setSelect(bool on) {
   toggle(this->m_state, Select, on);
 }
 
+void Gamepad::reset() {
+  this->m_state = 0;
+}
+
 void Gamepad::write(uint8_t value) {
   if (value == 0) this->m_pos = 0;
 }
